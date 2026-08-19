@@ -14,6 +14,8 @@ logging.basicConfig(level=logging.INFO)
 
 BOT_TOKEN = os.environ["BOT_TOKEN"]
 GROUP_CHAT_ID = os.environ.get("GROUP_CHAT_ID", "")
+CHANNEL_USERNAME = "@Turon_WiFi_Olmaliq"
+ADMIN_USER_ID = 8345237481
 WEBHOOK_SECRET = os.environ.get("WEBHOOK_SECRET", "")
 
 TELEGRAM_API = f"https://api.telegram.org/bot{BOT_TOKEN}"
@@ -564,7 +566,73 @@ async def telegram_webhook(request: Request):
             "text",
             ""
         ).strip()
+ # ----------------------------------------------------
+        # POST В КАНАЛ — ТОЛЬКО ДЛЯ АДМИНИСТРАТОРА
+        # ----------------------------------------------------
 
+        if text == "/post":
+
+            if chat_id != ADMIN_USER_ID:
+
+                await telegram(
+                    "sendMessage",
+                    {
+                        "chat_id": chat_id,
+                        "text": "⛔ Bu buyruq faqat administrator uchun."
+                    }
+                )
+
+                return {
+                    "ok": True
+                }
+
+            keyboard = {
+                "inline_keyboard": [
+                    [
+                        {
+                            "text": "📝 Ariza qoldirish",
+                            "url": "https://t.me/TuronTelecomOlmaliqBot?start=wifi_olmaliq"
+                        }
+                    ]
+                ]
+            }
+
+            await telegram(
+                "sendMessage",
+                {
+                    "chat_id": CHANNEL_USERNAME,
+
+                    "text": (
+                        "📡 <b>Turon Telecom Olmaliq</b>\n\n"
+
+                        "🏠 Uyingizga tezkor va sifatli "
+                        "internet ulang!\n\n"
+
+                        "📝 Internet ulash uchun ariza qoldiring.\n\n"
+
+                        "Ma’lumotlaringizni qoldiring — "
+                        "mutaxassisimiz siz bilan bog‘lanadi.\n\n"
+
+                        "👇 <b>Ariza qoldirish uchun tugmani bosing</b>"
+                    ),
+
+                    "parse_mode": "HTML",
+
+                    "reply_markup": keyboard
+                }
+            )
+
+            await telegram(
+                "sendMessage",
+                {
+                    "chat_id": chat_id,
+                    "text": "✅ Post kanalga yuborildi."
+                }
+            )
+
+            return {
+                "ok": True
+            }
 
         # ----------------------------------------------------
         # START
