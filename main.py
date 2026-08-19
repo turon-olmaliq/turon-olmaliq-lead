@@ -24,15 +24,6 @@ app = FastAPI(title="Turon Olmaliq Lead Bot")
 # ============================================================
 # TARIFLAR
 # ============================================================
-# Keyinchalik tarif narxini o'zgartirish uchun faqat shu
-# bo'limni o'zgartirish kifoya.
-#
-# Masalan:
-# "sodiq" -> tarifning ichki kodi
-# "Sodiq" -> mijoz ko'radigan nom
-# "175 000 so‘m/oy" -> narxi
-# "..." -> qisqa izoh
-# ============================================================
 
 TARIFLAR = {
 
@@ -42,40 +33,16 @@ TARIFLAR = {
         "izoh": "Internet + G3 Wi-Fi router + o‘rnatish bepul",
     },
 
-    # Keyinchalik boshqa tariflarni shu yerga qo‘shamiz.
-    #
-    # "turbo": {
-    #     "nomi": "Turbo",
-    #     "narxi": "250 000 so‘m/oy",
-    #     "izoh": "Yuqori tezlikdagi internet",
-    # },
-
 }
 
 
 # ============================================================
 # QR MANBALARI
 # ============================================================
-# QR kodlar uchun ko'cha + uy.
-#
-# QR ichida:
-# ehtirom-10
-#
-# Guruhga esa:
-# Ehtirom ko‘chasi, 10-uy
-#
-# Mijoz bu texnik kodni ko'rmaydi.
-# ============================================================
 
 QR_MANBALARI = {
 
     "ehtirom-10": "Ehtirom ko‘chasi, 10-uy",
-
-    # Keyinchalik shu tarzda qo'shamiz:
-    #
-    # "ehtirom-12": "Ehtirom ko‘chasi, 12-uy",
-    # "a-qahhor-7": "A. Qahhor ko‘chasi, 7-uy",
-    # "amir-temur-25": "Amir Temur ko‘chasi, 25-uy",
 
 }
 
@@ -88,6 +55,7 @@ SESSIONS = {}
 
 
 def get_session(chat_id: int):
+
     if chat_id not in SESSIONS:
         SESSIONS[chat_id] = {}
 
@@ -184,6 +152,35 @@ def tariffs_keyboard():
 
 
 # ============================================================
+# TARIF TANLASH YOKI O'TKAZIB YUBORISH
+# ============================================================
+
+def tariff_choice_keyboard():
+
+    buttons = []
+
+    for key, tarif in TARIFLAR.items():
+
+        buttons.append([
+            {
+                "text": f"📶 {tarif['nomi']} — {tarif['narxi']}",
+                "callback_data": f"tarif:{key}"
+            }
+        ])
+
+    buttons.append([
+        {
+            "text": "📝 Tarif tanlamasdan ariza berish",
+            "callback_data": "tarif:none"
+        }
+    ])
+
+    return {
+        "inline_keyboard": buttons
+    }
+
+
+# ============================================================
 # START
 # ============================================================
 
@@ -261,9 +258,11 @@ async def ask_name(chat_id: int):
         "sendMessage",
         {
             "chat_id": chat_id,
+
             "text": (
                 "👤 <b>Ismingizni kiriting:</b>"
             ),
+
             "parse_mode": "HTML"
         }
     )
@@ -345,6 +344,35 @@ async def ask_address(chat_id: int):
 
 
 # ============================================================
+# TARIFNI TANLASH / O'TKAZIB YUBORISH
+# ============================================================
+
+async def ask_tariff_or_skip(chat_id: int):
+
+    session = get_session(chat_id)
+
+    session["step"] = "tarif"
+
+    await telegram(
+        "sendMessage",
+        {
+            "chat_id": chat_id,
+
+            "text": (
+                "📶 <b>Tarifni tanlang</b>\n\n"
+                "Agar hozircha tarif tanlamoqchi "
+                "bo‘lmasangiz, arizani tarifsiz "
+                "ham yuborishingiz mumkin."
+            ),
+
+            "parse_mode": "HTML",
+
+            "reply_markup": tariff_choice_keyboard()
+        }
+    )
+
+
+# ============================================================
 # ARIZANI TASDIQLASH
 # ============================================================
 
@@ -352,7 +380,19 @@ async def show_confirmation(chat_id: int):
 
     session = get_session(chat_id)
 
-    tarif = TARIFLAR[session["tarif"]]
+    tarif_key = session.get("tarif")
+
+    if tarif_key and tarif_key in TARIFLAR:
+
+        tarif = TARIFLAR[tarif_key]
+
+        tarif_name = tarif["nomi"]
+        tarif_price = tarif["narxi"]
+
+    else:
+
+        tarif_name = "Не выбран"
+        tarif_price = "—"
 
     text = (
 
@@ -367,10 +407,10 @@ async def show_confirmation(chat_id: int):
         f"<b>{html.escape(session['address'])}</b>\n"
 
         f"📶 Tarif: "
-        f"<b>{html.escape(tarif['nomi'])}</b>\n"
+        f"<b>{html.escape(tarif_name)}</b>\n"
 
         f"💰 Narxi: "
-        f"<b>{html.escape(tarif['narxi'])}</b>\n\n"
+        f"<b>{html.escape(tarif_price)}</b>\n\n"
 
         "Hammasi to‘g‘rimi?"
     )
@@ -419,7 +459,19 @@ async def send_lead_to_group(chat_id: int):
 
     session = get_session(chat_id)
 
-    tarif = TARIFLAR[session["tarif"]]
+    tarif_key = session.get("tarif")
+
+    if tarif_key and tarif_key in TARIFLAR:
+
+        tarif = TARIFLAR[tarif_key]
+
+        tarif_name = tarif["nomi"]
+        tarif_price = tarif["narxi"]
+
+    else:
+
+        tarif_name = "Не выбран"
+        tarif_price = "—"
 
     source = session.get(
         "source",
@@ -446,10 +498,10 @@ async def send_lead_to_group(chat_id: int):
         f"<b>{html.escape(session['address'])}</b>\n\n"
 
         f"📶 Tarif: "
-        f"<b>{html.escape(tarif['nomi'])}</b>\n"
+        f"<b>{html.escape(tarif_name)}</b>\n"
 
         f"💰 Narxi: "
-        f"<b>{html.escape(tarif['narxi'])}</b>\n\n"
+        f"<b>{html.escape(tarif_price)}</b>\n\n"
 
         f"📢 <b>QR manbasi:</b>\n"
         f"{html.escape(source_name)}\n\n"
@@ -664,9 +716,7 @@ async def telegram_webhook(request: Request):
 
                 session["address"] = text
 
-                session["step"] = "tarif"
-
-                await show_tariffs(
+                await ask_tariff_or_skip(
                     chat_id
                 )
 
@@ -734,7 +784,21 @@ async def telegram_webhook(request: Request):
                 1
             )[1]
 
-            if key in TARIFLAR:
+            if key == "none":
+
+                session = get_session(
+                    chat_id
+                )
+
+                session["tarif"] = None
+
+                session["step"] = "confirm"
+
+                await show_confirmation(
+                    chat_id
+                )
+
+            elif key in TARIFLAR:
 
                 session = get_session(
                     chat_id
