@@ -1,3 +1,4 @@
+```python
 import os
 import html
 import logging
@@ -29,10 +30,119 @@ app = FastAPI(title="Turon Olmaliq Lead Bot")
 
 TARIFLAR = {
 
-    "sodiq": {
-        "nomi": "Sodiq",
-        "narxi": "175 000 so‘m/oy",
-        "izoh": "Internet + G3 Wi-Fi router + o‘rnatish bepul",
+    "premier80": {
+        "nomi": "Premier 80",
+        "narxi": "165 000 so‘m/oy",
+
+        "kunduz": "16:00–00:00 — 80 Mbit/s",
+        "tun": "00:00–16:00 — 200 Mbit/s",
+
+        "cinerama": "Cinerama Standard",
+        "tv": "170+ TV kanallar",
+        "film": "30 000+ film va seriallar",
+        "multfilm": "1 600+ multfilmlar",
+        "uzbek": "1 200+ o‘zbek kontenti",
+
+        "chegirma": "1–2 oyga 50% chegirma",
+        "oy1": "82 500 so‘m",
+        "oy2": "82 500 so‘m",
+        "oy3": "165 000 so‘m/oy",
+    },
+
+    "premier100": {
+        "nomi": "Premier 100",
+        "narxi": "185 000 so‘m/oy",
+
+        # ANIQ TEXNIK MA'LUMOT KEYIN KIRITILADI
+        "kunduz": "—",
+        "tun": "—",
+
+        "cinerama": "—",
+        "tv": "—",
+        "film": "—",
+        "multfilm": "—",
+        "uzbek": "—",
+
+        "chegirma": "1–2 oyga 50% chegirma",
+        "oy1": "92 500 so‘m",
+        "oy2": "92 500 so‘m",
+        "oy3": "185 000 so‘m/oy",
+    },
+
+    "ultima200": {
+        "nomi": "Ultima 200",
+        "narxi": "270 000 so‘m/oy",
+
+        "kunduz": "—",
+        "tun": "—",
+
+        "cinerama": "—",
+        "tv": "—",
+        "film": "—",
+        "multfilm": "—",
+        "uzbek": "—",
+
+        "chegirma": "1–2 oyga 50% chegirma",
+        "oy1": "135 000 so‘m",
+        "oy2": "135 000 so‘m",
+        "oy3": "270 000 so‘m/oy",
+    },
+
+    "ultima300": {
+        "nomi": "Ultima 300",
+        "narxi": "370 000 so‘m/oy",
+
+        "kunduz": "—",
+        "tun": "—",
+
+        "cinerama": "—",
+        "tv": "—",
+        "film": "—",
+        "multfilm": "—",
+        "uzbek": "—",
+
+        "chegirma": "1–2 oyga 50% chegirma",
+        "oy1": "185 000 so‘m",
+        "oy2": "185 000 so‘m",
+        "oy3": "370 000 so‘m/oy",
+    },
+
+    "ultima500": {
+        "nomi": "Ultima 500",
+        "narxi": "500 000 so‘m/oy",
+
+        "kunduz": "—",
+        "tun": "—",
+
+        "cinerama": "—",
+        "tv": "—",
+        "film": "—",
+        "multfilm": "—",
+        "uzbek": "—",
+
+        "chegirma": "1–2 oyga 50% chegirma",
+        "oy1": "250 000 so‘m",
+        "oy2": "250 000 so‘m",
+        "oy3": "500 000 so‘m/oy",
+    },
+
+    "ultima1000": {
+        "nomi": "Ultima 1000",
+        "narxi": "1 000 000 so‘m/oy",
+
+        "kunduz": "—",
+        "tun": "—",
+
+        "cinerama": "—",
+        "tv": "—",
+        "film": "—",
+        "multfilm": "—",
+        "uzbek": "—",
+
+        "chegirma": "1–2 oyga 50% chegirma",
+        "oy1": "500 000 so‘m",
+        "oy2": "500 000 so‘m",
+        "oy3": "1 000 000 so‘m/oy",
     },
 
 }
@@ -98,7 +208,7 @@ def get_source_name(source: str):
 
 
 # ============================================================
-# BOSHLANG'ICH MENYU
+# BOSHLANG‘ICH MENYU
 # ============================================================
 
 def main_keyboard():
@@ -154,7 +264,7 @@ def tariffs_keyboard():
 
 
 # ============================================================
-# TARIF TANLASH YOKI O'TKAZIB YUBORISH
+# TARIF TANLASH YOKI O‘TKAZIB YUBORISH
 # ============================================================
 
 def tariff_choice_keyboard():
@@ -179,6 +289,40 @@ def tariff_choice_keyboard():
 
     return {
         "inline_keyboard": buttons
+    }
+
+
+# ============================================================
+# TARIF BATAFSIL KARTOCHKASI
+# ============================================================
+
+def tariff_detail_keyboard(key: str):
+
+    return {
+        "inline_keyboard": [
+
+            [
+                {
+                    "text": "📝 Ushbu tarifga ulanish",
+                    "callback_data": f"lead:tarif:{key}"
+                }
+            ],
+
+            [
+                {
+                    "text": "⬅️ Tariflarga qaytish",
+                    "callback_data": "tarif:list"
+                }
+            ],
+
+            [
+                {
+                    "text": "🏠 Bosh menyu",
+                    "callback_data": "back:start"
+                }
+            ]
+
+        ]
     }
 
 
@@ -220,20 +364,37 @@ async def show_start(chat_id: int, source: str):
 
 
 # ============================================================
-# TARIFLARNI KO'RSATISH
+# TARIFLAR RO‘YXATI
 # ============================================================
 
 async def show_tariffs(chat_id: int):
 
-    text = "📶 <b>Tarifni tanlang:</b>\n\n"
+    text = (
+        "📋 <b>TARIFLAR</b>\n\n"
 
-    for tarif in TARIFLAR.values():
+        "1️⃣ <b>Premier 80</b> — 165 000 so‘m\n"
+        "🔥 1–2 oyga 50% CHEGIRMA!\n\n"
 
-        text += (
-            f"🔹 <b>{html.escape(tarif['nomi'])}</b>\n"
-            f"💰 {html.escape(tarif['narxi'])}\n"
-            f"ℹ️ {html.escape(tarif['izoh'])}\n\n"
-        )
+        "2️⃣ <b>Premier 100</b> — 185 000 so‘m\n"
+        "🔥 1–2 oyga 50% CHEGIRMA!\n\n"
+
+        "3️⃣ <b>Ultima 200</b> — 270 000 so‘m\n"
+        "🔥 1–2 oyga 50% CHEGIRMA!\n\n"
+
+        "4️⃣ <b>Ultima 300</b> — 370 000 so‘m\n"
+        "🔥 1–2 oyga 50% CHEGIRMA!\n\n"
+
+        "5️⃣ <b>Ultima 500</b> — 500 000 so‘m\n"
+        "🔥 1–2 oyga 50% CHEGIRMA!\n\n"
+
+        "6️⃣ <b>Ultima 1000</b> — 1 000 000 so‘m\n"
+        "🔥 1–2 oyga 50% CHEGIRMA!\n\n"
+
+        "📌 Bizda aksiyalar va maxsus takliflar "
+        "muntazam yangilanib turadi.\n\n"
+
+        "👇 <b>O‘zingizga mos tarifni tanlang!</b>"
+    )
 
     await telegram(
         "sendMessage",
@@ -247,7 +408,54 @@ async def show_tariffs(chat_id: int):
 
 
 # ============================================================
-# ISMNI SO'RASH
+# TARIF BATAFSIL
+# ============================================================
+
+async def show_tariff_detail(chat_id: int, key: str):
+
+    if key not in TARIFLAR:
+        return
+
+    tarif = TARIFLAR[key]
+
+    text = (
+        f"🚀 <b>{html.escape(tarif['nomi'])}</b>\n\n"
+
+        "⚡ <b>Tezlik:</b>\n"
+        f"☀️ {html.escape(tarif['kunduz'])}\n"
+        f"🌙 {html.escape(tarif['tun'])}\n\n"
+
+        f"🎬 <b>{html.escape(tarif['cinerama'])}</b>\n"
+        f"📺 {html.escape(tarif['tv'])}\n"
+        f"🎞 {html.escape(tarif['film'])}\n"
+        f"🎨 {html.escape(tarif['multfilm'])}\n"
+        f"🇺🇿 {html.escape(tarif['uzbek'])}\n\n"
+
+        f"💰 <b>Asosiy narx:</b> "
+        f"{html.escape(tarif['narxi'])}\n\n"
+
+        f"🎁 <b>1-oy:</b> {html.escape(tarif['oy1'])}\n"
+        f"🎁 <b>2-oy:</b> {html.escape(tarif['oy2'])}\n"
+        f"💳 <b>3-oydan:</b> {html.escape(tarif['oy3'])}\n\n"
+
+        f"🔥 <b>{html.escape(tarif['chegirma'])}!</b>\n\n"
+
+        "👇 <b>Ushbu tarifga ulanish uchun tugmani bosing.</b>"
+    )
+
+    await telegram(
+        "sendMessage",
+        {
+            "chat_id": chat_id,
+            "text": text,
+            "parse_mode": "HTML",
+            "reply_markup": tariff_detail_keyboard(key)
+        }
+    )
+
+
+# ============================================================
+# ISMNI SO‘RASH
 # ============================================================
 
 async def ask_name(chat_id: int):
@@ -271,7 +479,7 @@ async def ask_name(chat_id: int):
 
 
 # ============================================================
-# TELEFONNI SO'RASH
+# TELEFONNI SO‘RASH
 # ============================================================
 
 async def ask_phone(chat_id: int):
@@ -316,7 +524,7 @@ async def ask_phone(chat_id: int):
 
 
 # ============================================================
-# MANZILNI SO'RASH
+# MANZILNI SO‘RASH
 # ============================================================
 
 async def ask_address(chat_id: int):
@@ -346,7 +554,7 @@ async def ask_address(chat_id: int):
 
 
 # ============================================================
-# TARIFNI TANLASH / O'TKAZIB YUBORISH
+# TARIFNI TANLASH / O‘TKAZIB YUBORISH
 # ============================================================
 
 async def ask_tariff_or_skip(chat_id: int):
@@ -362,6 +570,7 @@ async def ask_tariff_or_skip(chat_id: int):
 
             "text": (
                 "📶 <b>Tarifni tanlang</b>\n\n"
+
                 "Agar hozircha tarif tanlamoqchi "
                 "bo‘lmasangiz, arizani tarifsiz "
                 "ham yuborishingiz mumkin."
@@ -393,7 +602,7 @@ async def show_confirmation(chat_id: int):
 
     else:
 
-        tarif_name = "Не выбран"
+        tarif_name = "Tarif tanlanmagan"
         tarif_price = "—"
 
     text = (
@@ -469,11 +678,13 @@ async def send_lead_to_group(chat_id: int):
 
         tarif_name = tarif["nomi"]
         tarif_price = tarif["narxi"]
+        tarif_discount = tarif["chegirma"]
 
     else:
 
-        tarif_name = "Не выбран"
+        tarif_name = "Tarif tanlanmagan"
         tarif_price = "—"
+        tarif_discount = "—"
 
     source = session.get(
         "source",
@@ -503,7 +714,10 @@ async def send_lead_to_group(chat_id: int):
         f"<b>{html.escape(tarif_name)}</b>\n"
 
         f"💰 Narxi: "
-        f"<b>{html.escape(tarif_price)}</b>\n\n"
+        f"<b>{html.escape(tarif_price)}</b>\n"
+
+        f"🎁 Aksiya: "
+        f"<b>{html.escape(tarif_discount)}</b>\n\n"
 
         f"📢 <b>QR manbasi:</b>\n"
         f"{html.escape(source_name)}\n\n"
@@ -566,7 +780,9 @@ async def telegram_webhook(request: Request):
             "text",
             ""
         ).strip()
- # ----------------------------------------------------
+
+
+        # ----------------------------------------------------
         # POST В КАНАЛ — ТОЛЬКО ДЛЯ АДМИНИСТРАТОРА
         # ----------------------------------------------------
 
@@ -578,7 +794,10 @@ async def telegram_webhook(request: Request):
                     "sendMessage",
                     {
                         "chat_id": chat_id,
-                        "text": "⛔ Bu buyruq faqat administrator uchun."
+                        "text": (
+                            "⛔ Bu buyruq faqat "
+                            "administrator uchun."
+                        )
                     }
                 )
 
@@ -587,14 +806,22 @@ async def telegram_webhook(request: Request):
                 }
 
             keyboard = {
+
                 "inline_keyboard": [
+
                     [
                         {
                             "text": "📝 Ariza qoldirish",
-                            "url": "https://t.me/TuronTelecomOlmaliqBot?start=wifi_olmaliq"
+                            "url": (
+                                "https://t.me/"
+                                "TuronTelecomOlmaliqBot"
+                                "?start=wifi_olmaliq"
+                            )
                         }
                     ]
+
                 ]
+
             }
 
             await telegram(
@@ -608,12 +835,14 @@ async def telegram_webhook(request: Request):
                         "🏠 Uyingizga tezkor va sifatli "
                         "internet ulang!\n\n"
 
-                        "📝 Internet ulash uchun ariza qoldiring.\n\n"
+                        "📝 Internet ulash uchun "
+                        "ariza qoldiring.\n\n"
 
                         "Ma’lumotlaringizni qoldiring — "
                         "mutaxassisimiz siz bilan bog‘lanadi.\n\n"
 
-                        "👇 <b>Ariza qoldirish uchun tugmani bosing</b>"
+                        "👇 <b>Ariza qoldirish uchun "
+                        "tugmani bosing</b>"
                     ),
 
                     "parse_mode": "HTML",
@@ -633,6 +862,7 @@ async def telegram_webhook(request: Request):
             return {
                 "ok": True
             }
+
 
         # ----------------------------------------------------
         # START
@@ -843,14 +1073,14 @@ async def telegram_webhook(request: Request):
         # TARIF TANLASH
         # ----------------------------------------------------
 
-        elif data.startswith(
-            "tarif:"
-        ):
+        elif data.startswith("tarif:"):
 
             key = data.split(
                 ":",
                 1
             )[1]
+
+            # Tarif tanlamasdan ariza
 
             if key == "none":
 
@@ -866,7 +1096,28 @@ async def telegram_webhook(request: Request):
                     chat_id
                 )
 
+            # Aniq tarif
+
             elif key in TARIFLAR:
+
+                await show_tariff_detail(
+                    chat_id,
+                    key
+                )
+
+
+        # ----------------------------------------------------
+        # TARIFDAN ARIZA BOSHLASH
+        # ----------------------------------------------------
+
+        elif data.startswith("lead:tarif:"):
+
+            key = data.split(
+                ":",
+                2
+            )[2]
+
+            if key in TARIFLAR:
 
                 session = get_session(
                     chat_id
@@ -874,9 +1125,7 @@ async def telegram_webhook(request: Request):
 
                 session["tarif"] = key
 
-                session["step"] = "confirm"
-
-                await show_confirmation(
+                await ask_name(
                     chat_id
                 )
 
@@ -905,6 +1154,21 @@ async def telegram_webhook(request: Request):
         # ----------------------------------------------------
 
         elif data == "lead:restart":
+
+            source = get_session(
+                chat_id
+            ).get(
+                "source",
+                "unknown"
+            )
+
+            session = get_session(
+                chat_id
+            )
+
+            session.clear()
+
+            session["source"] = source
 
             await ask_name(
                 chat_id
@@ -951,6 +1215,7 @@ async def telegram_webhook(request: Request):
 
                         "text": (
                             "⚠️ Ariza tayyor.\n\n"
+
                             "Tizim hozircha ishchi "
                             "guruhga ulanmagan."
                         )
@@ -983,3 +1248,4 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=port
     )
+```
