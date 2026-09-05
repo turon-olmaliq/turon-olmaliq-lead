@@ -53,14 +53,14 @@ TARIFLAR = {
         "narxi": "185 000 so‘m/oy",
 
         # ANIQ TEXNIK MA'LUMOT KEYIN KIRITILADI
-        "kunduz": "—",
-        "tun": "—",
+       "kunduz": "100 Mbit/s",
+        "tun": "200 Mbit/s",
 
-        "cinerama": "—",
-        "tv": "—",
-        "film": "—",
-        "multfilm": "—",
-        "uzbek": "—",
+        "cinerama": "Cinerama Standard",
+        "tv": "170+ TV kanallar",
+        "film": "30 000+ film va seriallar",
+        "multfilm": "1 600+ multfilmlar",
+        "uzbek": "1 200+ o‘zbek kontenti",
 
         "chegirma": "1–2 oyga 50% chegirma",
         "oy1": "92 500 so‘m",
@@ -72,14 +72,14 @@ TARIFLAR = {
         "nomi": "Ultima 200",
         "narxi": "270 000 so‘m/oy",
 
-        "kunduz": "—",
-        "tun": "—",
+        "kunduz": "200 Mbit/s",
+        "tun": "300 Mbit/s",
 
-        "cinerama": "—",
-        "tv": "—",
-        "film": "—",
-        "multfilm": "—",
-        "uzbek": "—",
+        "cinerama": "Cinerama Premium",
+        "tv": "170+ TV kanallar",
+        "film": "33 000+ film va seriallar",
+        "multfilm": "1 800+ multfilmlar",
+        "uzbek": "1 200+ o‘zbek kontenti",
 
         "chegirma": "1–2 oyga 50% chegirma",
         "oy1": "135 000 so‘m",
@@ -87,18 +87,18 @@ TARIFLAR = {
         "oy3": "270 000 so‘m/oy",
     },
 
-    "ultima300": {
+     "ultima300": {
         "nomi": "Ultima 300",
         "narxi": "370 000 so‘m/oy",
 
-        "kunduz": "—",
-        "tun": "—",
+        "kunduz": "300 Mbit/s",
+        "tun": "300 Mbit/s",
 
-        "cinerama": "—",
-        "tv": "—",
-        "film": "—",
-        "multfilm": "—",
-        "uzbek": "—",
+        "cinerama": "Cinerama Premium",
+        "tv": "170+ TV kanallar",
+        "film": "33 000+ film va seriallar",
+        "multfilm": "1 800+ multfilmlar",
+        "uzbek": "1 200+ o‘zbek kontenti",
 
         "chegirma": "1–2 oyga 50% chegirma",
         "oy1": "185 000 so‘m",
@@ -106,18 +106,18 @@ TARIFLAR = {
         "oy3": "370 000 so‘m/oy",
     },
 
-    "ultima500": {
+     "ultima500": {
         "nomi": "Ultima 500",
         "narxi": "500 000 so‘m/oy",
 
-        "kunduz": "—",
-        "tun": "—",
+        "kunduz": "500 Mbit/s",
+        "tun": "500 Mbit/s",
 
-        "cinerama": "—",
-        "tv": "—",
-        "film": "—",
-        "multfilm": "—",
-        "uzbek": "—",
+        "cinerama": "Cinerama Premium",
+        "tv": "170+ TV kanallar",
+        "film": "33 000+ film va seriallar",
+        "multfilm": "1 800+ multfilmlar",
+        "uzbek": "1 200+ o‘zbek kontenti",
 
         "chegirma": "1–2 oyga 50% chegirma",
         "oy1": "250 000 so‘m",
@@ -125,18 +125,18 @@ TARIFLAR = {
         "oy3": "500 000 so‘m/oy",
     },
 
-    "ultima1000": {
+     "ultima1000": {
         "nomi": "Ultima 1000",
         "narxi": "1 000 000 so‘m/oy",
 
-        "kunduz": "—",
-        "tun": "—",
+        "kunduz": "1000 Mbit/s",
+        "tun": "1000 Mbit/s",
 
-        "cinerama": "—",
-        "tv": "—",
-        "film": "—",
-        "multfilm": "—",
-        "uzbek": "—",
+        "cinerama": "Cinerama Premium",
+        "tv": "170+ TV kanallar",
+        "film": "33 000+ film va seriallar",
+        "multfilm": "1 800+ multfilmlar",
+        "uzbek": "1 200+ o‘zbek kontenti",
 
         "chegirma": "1–2 oyga 50% chegirma",
         "oy1": "500 000 so‘m",
